@@ -1,0 +1,14 @@
+#meat-container{
+    display: flex;
+    flex-direction: row;
+}
+
+#create-app-container{
+    display: flex;
+    width: 50%;
+}
+
+#table-container{
+    display:flex;
+    width: 50%;
+}
