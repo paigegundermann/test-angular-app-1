@@ -3,10 +3,10 @@
   <h2>Lets submit some job apps</h2>
   <div id="meat-container">
     <div id="create-app-container">
-      <app-create-application></app-create-application>
+      <app-create-application [application]="application" (editCompleteEvent)="clearApplication()"></app-create-application>
     </div>
     <div id="table-container">
-      <app-application-table></app-application-table>
+      <app-application-table (editApplicationEvent)="editApplication($event)"></app-application-table>
     </div>
   </div>  
   <router-outlet></router-outlet>

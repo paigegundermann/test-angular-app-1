@@ -1,1 +1,13 @@
-<p>application-table works!</p>
+<div id="table-container">
+    <table>
+        <tr class="table-header-row">
+            @for(header of headerList; track header){
+                <th class="table-header-row-item"><a (click)="sortData(header)">{{header}}</a></th>
+            }
+            <th class="table-header-spacer"></th>
+        </tr>
+        @for(application of applicationList; track application){
+            <tr app-application-table-item [application]="application" (editApplication)="editApplication($event)" (deleteApplication)="deleteApplication($event)"></tr>
+        }
+    </table>
+</div>

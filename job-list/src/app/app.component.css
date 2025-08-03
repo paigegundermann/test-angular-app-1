@@ -5,10 +5,11 @@
 
 #create-app-container{
     display: flex;
-    width: 50%;
+    width: 25%;
+    margin: 0 2.5%;
 }
 
 #table-container{
     display:flex;
-    width: 50%;
+    width: 70%;
 }

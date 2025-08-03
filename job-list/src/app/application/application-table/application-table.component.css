@@ -1,0 +1,17 @@
+#table-container{
+    width:70vw;
+}
+
+.table-header-row{
+    display: flex;
+    width: 70vw;
+}
+
+.table-header-row-item{
+    width: 70vw;
+    flex: 3;
+}
+
+.table-header-spacer{
+    width: 48px;
+}

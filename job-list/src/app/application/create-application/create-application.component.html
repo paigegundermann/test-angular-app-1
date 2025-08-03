@@ -1,7 +1,22 @@
 <div id="create-app-root">
-    <h2>Add New Application</h2>
-    <mat-form-field appearance="outline">
-        <mat-label>Enter New Job Info Here</mat-label>
-        <textarea matInput></textarea>
-    </mat-form-field>
+    <div id="form-header">
+        <h2>Add New Application</h2>
+    </div>
+    <div id="form-container">
+        <form [formGroup]="applicationForm" (submit)="application ? updateApplication() : submitNewApplication()">
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Title</mat-label>
+                <input matInput formControlName="Title"/>
+            </mat-form-field>
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Salary</mat-label>
+                <input matInput formControlName="Salary"/>
+            </mat-form-field>
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Experience</mat-label>
+                <input matInput formControlName="Experience"/>
+            </mat-form-field>
+            <button mat-flat-button type="submit" [disabled]="checkForm()" class="submit-button">{{buttonLabel}}</button>
+        </form>
+    </div>
 </div>

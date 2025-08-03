@@ -1,1 +1,14 @@
-<p>application-table-item works!</p>
+
+<td class="item-value">{{application.Title}}</td>
+<td class="item-value">{{application.Salary}}</td>
+<td class="item-value">{{application.Experience}}</td>
+<td class="item-buttons">   
+    <button mat-mini-fab class="edit-button" (click)="editEntry()">
+        <mat-icon>edit</mat-icon>
+    </button>
+</td>
+<td class="item-buttons">   
+    <button mat-mini-fab class="delete-button" (click)="deleteEntry()">
+        <mat-icon>delete</mat-icon>
+    </button>
+</td>
