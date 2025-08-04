@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
-import { catchError, Observable, of, Subject, tap, throwError } from "rxjs";
+import { catchError, Observable, of, Subject, take, tap, throwError } from "rxjs";
 import { Application } from "../interfaces/application";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable({providedIn: 'root'})
 export class ApiService {
@@ -8,54 +9,76 @@ export class ApiService {
     private _dataSubject: Subject<Application[]> = new Subject<Application[]>();
     public dataObservable: Observable<Application[]> = this._dataSubject.asObservable();
 
-    private _data: Application[] = [
-        {
-            Id: 1,
-            Title: 'Software Engineer',
-            Experience: 5,
-            Salary: 100000
-        },
-        {
-            Id: 2,
-            Title: 'UI Designer',
-            Experience: 2,
-            Salary: 110000
-        },
-        {
-            Id: 3,
-            Title: 'Teacher',
-            Experience: 1,
-            Salary: 60000
-        }
-    ];
+     private _data: Application[] = [];
+    //     {
+    //         Id: 1,
+    //         Title: 'Software Engineer',
+    //         Experience: 5,
+    //         Salary: 100000
+    //     },
+    //     {
+    //         Id: 2,
+    //         Title: 'UI Designer',
+    //         Experience: 2,
+    //         Salary: 110000
+    //     },
+    //     {
+    //         Id: 3,
+    //         Title: 'Teacher',
+    //         Experience: 1,
+    //         Salary: 60000
+    //     }
+    // ];
 
     lastSort: String = "Title";
 
-    constructor(){
+    apiUri = 'http://localhost:8080/applications';
+
+    constructor(private readonly _http: HttpClient){
     }
+
+    //ensure MongoDB / Node.js server is running!!! node app.js in mongo project
 
     public getData(): void {
         console.log('poop1');
-        this.sortData(this.lastSort);
-        this._dataSubject.next(this._data);
+        this._http.get('http://localhost:8080/applications').pipe(take(1)).subscribe((appilcations: any) => {
+            appilcations.map((app: any) => {
+                app = Object.assign(app, { Id: app._id });
+                delete app['_id'];
+            })
+            this.sortData(this.lastSort);
+            this._data = appilcations;
+            this._dataSubject.next(this._data);
+        });
     }
 
     public addApplication(app: Application): void {
-        app.Id = Math.max(...this._data.map((appl)=> appl.Id)) + 1;
-        this._data.push(app);
-        this.sortData(this.lastSort);
-        console.log('poop2');
+        this._http.post(this.apiUri, app).pipe(take(1)).subscribe((result: any) => {
+            // parse the added app out
+            Object.assign(app, { Id: result._id })
+            this._data.push(result);
+            this.sortData(this.lastSort);
+            this._dataSubject.next(this._data);
+            console.log('poop2');
+        });
     }
 
     public updateApplication(app: Application): void {
         let appToUpdateIndex = this._data.findIndex((a) => a.Id === app.Id);
-        this._data[appToUpdateIndex] = app;
-        this.sortData(this.lastSort);
+        this._http.put(this.apiUri + "/" + app.Id, app).pipe(take(1)).subscribe((result) => {
+            this._data[appToUpdateIndex] = app;
+            this.sortData(this.lastSort);
+            this._dataSubject.next(this._data);
+        });      
     } 
 
     public deleteApplication(application: Application): void {
-        this._data = this._data.filter((a) => a.Id !== application.Id);
-        this._dataSubject.next(this._data);
+        this._http.delete(this.apiUri + "/" + application.Id).pipe(take(1)).subscribe((result) => {
+            if(result){
+                this._data = this._data.filter((a) => a.Id !== application.Id);
+                this._dataSubject.next(this._data);
+            }
+        })
     }
 
     public sortData(sortBy: String): void {
