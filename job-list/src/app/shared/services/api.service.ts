@@ -55,11 +55,13 @@ export class ApiService {
     public addApplication(app: Application): void {
         this._http.post(this.apiUri, app).pipe(take(1)).subscribe((result: any) => {
             // parse the added app out
-            Object.assign(app, { Id: result._id })
-            this._data.push(result);
-            this.sortData(this.lastSort);
-            this._dataSubject.next(this._data);
-            console.log('poop2');
+            if(result.acknowledged){
+                Object.assign(app, { Id: result._id })
+                this._data.push(app);
+                this.sortData(this.lastSort);
+                this._dataSubject.next(this._data);
+                console.log('poop2');
+            }
         });
     }
 
